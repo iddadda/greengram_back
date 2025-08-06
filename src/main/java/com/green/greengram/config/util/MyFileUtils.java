@@ -21,7 +21,7 @@ public class MyFileUtils {
         return uploadPath;
     }
 
-    public MyFileUtils(@Value("${constants.file.directory}") String uploadPath) {
+    public MyFileUtils(@Value("${constants.file.upload-directory}") String uploadPath) {
         log.info("MyFileUtils - 생성자: {}", uploadPath);
         this.uploadPath = uploadPath;
     }
