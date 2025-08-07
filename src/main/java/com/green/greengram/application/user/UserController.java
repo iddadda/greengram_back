@@ -48,10 +48,12 @@ public class UserController {
         jwtTokenManager.signOut(response);
         return new ResultResponse<>("sign-out 성공", null);
     }
+
+//    로그인 연장
     @PostMapping("/reissue")
     public ResultResponse<?> reissue(HttpServletRequest request, HttpServletResponse response) {
         jwtTokenManager.reissue(request, response);
-        return new ResultResponse<>("sign-out 성공", null);
+        return new ResultResponse<>("AccessToken 재발행 성공", null);
     }
 
 }
