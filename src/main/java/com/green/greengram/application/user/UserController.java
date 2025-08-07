@@ -18,12 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     private final UserService userService;
 
-//   회원가입
+
+    //   회원가입
     @PostMapping("/sign-up")
     public ResultResponse<?> signUp(@Valid @RequestPart UserSignUpReq req, @RequestPart(required = false) MultipartFile pic) {
         log.info("req:{}", req);
         log.info("pic:{}", pic != null ? pic.getOriginalFilename() : pic);
+        userService.signUp(req, pic);
         return new ResultResponse<Integer>("", 1);
     }
-
 }
+
