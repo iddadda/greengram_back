@@ -18,7 +18,7 @@ public class Feed extends UpdatedAt{
 
     @ManyToOne
     @JoinColumn(name = "writer_user_id",  nullable = false)
-    private User user;
+    private User writerUser;
 
     @Column(length = 30)
     private String location;
