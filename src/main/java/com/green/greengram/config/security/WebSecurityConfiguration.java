@@ -1,5 +1,6 @@
 package com.green.greengram.config.security;
 
+import com.green.greengram.config.enumcode.model.EnumUserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,9 +45,9 @@ public class WebSecurityConfiguration {
 //                cors 설정
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource())) // ⭐️⭐️⭐️
 
-                .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/cart").authenticated()
-                        .requestMatchers("/api/v1/order").authenticated()
-                        .requestMatchers(HttpMethod.POST,"/api/v1/item").hasRole("USER_2")  // "해당 주소에서 post로 들어 왔을 때만 로그인 해야 된다." 라는 의미
+                .authorizeHttpRequests(req -> req.requestMatchers(HttpMethod.POST, "/api/feed")
+                        .hasAnyRole(EnumUserRole.USER_1.name())  // "해당 주소에서 post로 들어 왔을 때만 로그인 해야 된다." 라는 의미
+                        .requestMatchers("/api/feed").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
