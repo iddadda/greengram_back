@@ -1,6 +1,8 @@
 package com.green.greengram.application.feed;
 
 
+import com.green.greengram.application.feed.model.FeedGetDto;
+import com.green.greengram.application.feed.model.FeedGetRes;
 import com.green.greengram.application.feed.model.FeedPostReq;
 import com.green.greengram.application.feed.model.FeedPostRes;
 import com.green.greengram.config.util.ImgUploadManager;
@@ -20,8 +22,9 @@ import java.util.List;
 public class FeedService {
     private final FeedRepository feedRepository;
     private final ImgUploadManager imgUploadManager;
+    private final FeedMapper feedMapper;
 
-//    피드 등록
+    //    피드 등록
     @Transactional
     public FeedPostRes postFeed(long signedUserId, FeedPostReq req, List<MultipartFile> pics) {
         User writerUser = new User();
@@ -43,7 +46,10 @@ public class FeedService {
 
     }
 
-//    페이징처리
+//    페이징처리, 피드 리스트 받아오기
+    public List<FeedGetRes> getFeedList(FeedGetDto dto) {
+        return feedMapper.findAllLimitedTo(dto);
+    }
 
 
 }

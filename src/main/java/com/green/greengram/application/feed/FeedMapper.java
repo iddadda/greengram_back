@@ -9,5 +9,4 @@ import java.util.List;
 @Mapper
 public interface FeedMapper {
     List<FeedGetRes> findAllLimitedTo(FeedGetDto dto);
-
 }

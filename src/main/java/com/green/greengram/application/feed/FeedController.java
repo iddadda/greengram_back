@@ -1,9 +1,6 @@
 package com.green.greengram.application.feed;
 
-import com.green.greengram.application.feed.model.FeedGetDto;
-import com.green.greengram.application.feed.model.FeedGetReq;
-import com.green.greengram.application.feed.model.FeedPostReq;
-import com.green.greengram.application.feed.model.FeedPostRes;
+import com.green.greengram.application.feed.model.*;
 import com.green.greengram.config.model.ResultResponse;
 import com.green.greengram.config.model.UserPrincipal;
 import jakarta.validation.Valid;
@@ -49,6 +46,8 @@ public class FeedController {
                 .size(req.getRowPerPage())
                 .build();
 
-        return null;
+        List<FeedGetRes>  result = feedService.getFeedList(feedGetDto);
+
+        return new ResultResponse<>("조회 성공", result);
     }
 }
