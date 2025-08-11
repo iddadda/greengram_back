@@ -48,7 +48,12 @@ public class FeedService {
 
 //    페이징처리, 피드 리스트 받아오기
     public List<FeedGetRes> getFeedList(FeedGetDto dto) {
-        return feedMapper.findAllLimitedTo(dto);
+        List<FeedGetRes> list = feedMapper.findAllLimitedTo(dto);
+for(FeedGetRes feedGetRes : list){
+    feedGetRes.setPics(feedMapper.findAllPicByFeedId(feedGetRes.getFeedId()));
+}
+//        각 피드에서 사진 가져오기
+        return list;
     }
 
 
