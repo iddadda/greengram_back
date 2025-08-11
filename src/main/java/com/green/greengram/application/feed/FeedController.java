@@ -1,6 +1,9 @@
 package com.green.greengram.application.feed;
 
+import com.green.greengram.application.feed.model.FeedGetDto;
+import com.green.greengram.application.feed.model.FeedGetReq;
 import com.green.greengram.application.feed.model.FeedPostReq;
+import com.green.greengram.application.feed.model.FeedPostRes;
 import com.green.greengram.config.model.ResultResponse;
 import com.green.greengram.config.model.UserPrincipal;
 import jakarta.validation.Valid;
@@ -29,8 +32,23 @@ public class FeedController {
         log.info("req:{}", req);
         log.info("pics.size():{}", pics.size());
 
-        feedService.postFeed(userPrincipal.getSignedUserId(), req, pics);
+        FeedPostRes result = feedService.postFeed(userPrincipal.getSignedUserId(), req, pics);
+        return new ResultResponse<>("피드 등록 완료", result);
+    }
 
-        return new ResultResponse<>("피드등록완료", 1);
+    // 페이징, 피드(사진, 댓글(3개만))
+    // 현재는 피드+사진만 (n+1)
+    @GetMapping
+    public ResultResponse<?> getFeedList(@AuthenticationPrincipal UserPrincipal userPrincipal, @Valid @ModelAttribute FeedGetReq req){
+        log.info("signedUserId:{}", userPrincipal.getSignedUserId());
+        log.info("req:{}", req);
+
+        FeedGetDto feedGetDto = FeedGetDto.builder()
+                .signedUserId(userPrincipal.getSignedUserId())
+                .startIdx((req.getPage()-1) * req.getRowPerPage())
+                .size(req.getRowPerPage())
+                .build();
+
+        return null;
     }
 }

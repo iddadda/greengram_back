@@ -32,7 +32,7 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: update #테이블은 없는데 entity가 존재하면 create 한다.
+      ddl-auto: update #entity 수정이 파악되면 테이블 수정ㄷㅚㅁ.
       #ddl-auto: create #프로젝트 실행시마다 테이블 drop 후 다시 create
     properties:
       hibernate:

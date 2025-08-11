@@ -2,6 +2,7 @@ package com.green.greengram.application.feed;
 
 
 import com.green.greengram.application.feed.model.FeedPostReq;
+import com.green.greengram.application.feed.model.FeedPostRes;
 import com.green.greengram.config.util.ImgUploadManager;
 import com.green.greengram.entity.Feed;
 import com.green.greengram.entity.User;
@@ -22,7 +23,7 @@ public class FeedService {
 
 //    피드 등록
     @Transactional
-    public void postFeed(long signedUserId, FeedPostReq req, List<MultipartFile> pics) {
+    public FeedPostRes postFeed(long signedUserId, FeedPostReq req, List<MultipartFile> pics) {
         User writerUser = new User();
         writerUser.setUserId(signedUserId);
 
@@ -38,6 +39,11 @@ public class FeedService {
         List<String> fileNames = imgUploadManager.saveFeedPics(feed.getFeedId(), pics);
         feed.addFeedPics(fileNames);
 
+        return new FeedPostRes(feed.getFeedId(), fileNames);
+
     }
+
+//    페이징처리
+
 
 }
