@@ -1,5 +1,6 @@
 package com.green.greengram.application.feed.model;
 
+import com.green.greengram.application.feedComment.model.FeedCommentGetRes;
 import lombok.*;
 
 import java.util.List;
@@ -17,4 +18,7 @@ public class FeedGetRes {
     private String writerPic;
     private int isLike;  // 0 이면 좋아요 x, 1 이면 좋아요 o
     private List<String> pics;
+
+//    피드에 달려있는 댓글정보
+    private FeedCommentGetRes comments;
 }

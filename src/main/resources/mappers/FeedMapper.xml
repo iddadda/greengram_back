@@ -3,7 +3,7 @@
 <mapper namespace="com.green.greengram.application.feed.FeedMapper">
 
     <select id="findAllLimitedTo">
-        SELECT a.feed_id, contents, location, a.created_at, a.writer_user_id, uid, nick_name, pic, c.feed_id IS NOT NULL AS isLike
+        SELECT a.feed_id, contents, location, a.created_at, a.writer_user_id, uid AS writerUid, nick_name AS writerNickName, pic AS writerPic, c.feed_id IS NOT NULL AS isLike
         FROM feed a
         JOIN user b
         ON a.writer_user_id = b.user_id

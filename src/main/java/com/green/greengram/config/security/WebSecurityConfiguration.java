@@ -47,7 +47,7 @@ public class WebSecurityConfiguration {
 
                 .authorizeHttpRequests(req -> req.requestMatchers(HttpMethod.POST, "/api/feed")
                         .hasAnyRole(EnumUserRole.USER_1.name())  // "해당 주소에서 post로 들어 왔을 때만 로그인 해야 된다." 라는 의미
-                        .requestMatchers("/api/feed").authenticated()
+                        .requestMatchers("/api/feed", "/api/feed/like", "/api/feed/comment").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
