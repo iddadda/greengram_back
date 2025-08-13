@@ -22,7 +22,7 @@ public class FeedController {
     private final FeedService feedService;
     private final int MAX_PIC_COUNT = 10;
 
-//    피드 등록
+    //    피드 등록
     @PostMapping
     public ResultResponse<?> postFeed(@AuthenticationPrincipal UserPrincipal userPrincipal
                                     , @Valid @RequestPart FeedPostReq req
