@@ -9,6 +9,7 @@ import com.green.greengram.application.feedComment.FeedCommentMapper;
 import com.green.greengram.application.feedComment.model.FeedCommentGetReq;
 import com.green.greengram.application.feedComment.model.FeedCommentGetRes;
 import com.green.greengram.application.feedComment.model.FeedCommentItem;
+import com.green.greengram.config.constants.ConstComment;
 import com.green.greengram.config.util.ImgUploadManager;
 import com.green.greengram.entity.Feed;
 import com.green.greengram.entity.User;
@@ -28,6 +29,7 @@ public class FeedService {
     private final FeedCommentMapper feedCommentMapper;
     private final FeedRepository feedRepository;
     private final ImgUploadManager imgUploadManager;
+    private final ConstComment constComment;
 
     //    피드 등록
     @Transactional
@@ -55,22 +57,21 @@ public class FeedService {
     public List<FeedGetRes> getFeedList(FeedGetDto dto) {
         List<FeedGetRes> list = feedMapper.findAllLimitedTo(dto);
 //        각 피드에서 사진 가져오기, 댓글 가져오기(4개만)
-        final int START_IDX = 0;
-        final int SIZE = 4;
-        final int MORE_COMMENT = 4;
+
 
         for (FeedGetRes feedGetRes : list) {
 //            사진
             feedGetRes.setPics(feedMapper.findAllPicByFeedId(feedGetRes.getFeedId()));
 
 //            댓글
-            FeedCommentGetReq req = new FeedCommentGetReq(feedGetRes.getFeedId(), START_IDX, SIZE);
+            FeedCommentGetReq req = new FeedCommentGetReq(feedGetRes.getFeedId(), constComment.startIndex, constComment.size);
             List<FeedCommentItem> commentList = feedCommentMapper.findAllByFeedIdLimitedTo(req);
-            boolean moreComment = commentList.size() == MORE_COMMENT;
+//            row 수가 4였을 대 true, row 가 0~3 인 경우 false => 결과에 따라 프론트에서 더보기 활성화 함
+            boolean moreComment = commentList.size() == constComment.size;
             FeedCommentGetRes feedCommentGetRes = new FeedCommentGetRes(moreComment, commentList);
             feedGetRes.setComments(feedCommentGetRes);
             if (moreComment) { // 마지막 댓글 삭제
-                commentList.remove(MORE_COMMENT - 1);
+                commentList.remove(commentList.size() - 1);
             }
         }
         return list;

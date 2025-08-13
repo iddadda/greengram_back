@@ -3,6 +3,11 @@ constants:
     upload-directory: D:/student/ida/backend/upload/greengram
     feed-pic: /feed
     profile-pic: /profile
+
+  comment:
+    start-index: 0
+    size: 4
+
   jwt:
     issuer: green502@green.com  #토큰 발행자
     bearer-format: JWT
