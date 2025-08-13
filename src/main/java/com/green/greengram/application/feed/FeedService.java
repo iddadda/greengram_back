@@ -58,7 +58,6 @@ public class FeedService {
         List<FeedGetRes> list = feedMapper.findAllLimitedTo(dto);
 //        각 피드에서 사진 가져오기, 댓글 가져오기(4개만)
 
-
         for (FeedGetRes feedGetRes : list) {
 //            사진
             feedGetRes.setPics(feedMapper.findAllPicByFeedId(feedGetRes.getFeedId()));
@@ -67,7 +66,7 @@ public class FeedService {
             FeedCommentGetReq req = new FeedCommentGetReq(feedGetRes.getFeedId(), constComment.startIndex, constComment.size);
             List<FeedCommentItem> commentList = feedCommentMapper.findAllByFeedIdLimitedTo(req);
 //            row 수가 4였을 대 true, row 가 0~3 인 경우 false => 결과에 따라 프론트에서 더보기 활성화 함
-            boolean moreComment = commentList.size() == constComment.size;
+            boolean moreComment = commentList.size() > constComment.size;
             FeedCommentGetRes feedCommentGetRes = new FeedCommentGetRes(moreComment, commentList);
             feedGetRes.setComments(feedCommentGetRes);
             if (moreComment) { // 마지막 댓글 삭제
