@@ -59,11 +59,11 @@ public class UserController {
     //    프로필 조회
     @GetMapping("/profile")
     public ResultResponse<?> getProfileUser(@AuthenticationPrincipal UserPrincipal userPrincipal
-            , @RequestParam("profile_user_id") Long profileUserId) {
+            , @RequestParam("profile_user_id") long profileUserId) {
+        log.info("profileUserId: {}", profileUserId);
         UserProfileGetDto dto = new UserProfileGetDto(userPrincipal.getSignedUserId(), profileUserId);
         UserProfileGetRes userProfileGetRes = userService.getProfileUser(dto);
-        return new ResultResponse<>("user profile 정보", userProfileGetRes);
-
+        return new ResultResponse<>("프로파일 유저 정보", userProfileGetRes);
     }
 
 }

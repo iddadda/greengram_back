@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.green.greengram.application.feed.UserMapper">
+<mapper namespace="com.green.greengram.application.user.UserMapper">
 
     <select id="findProfileByUserId">
-        SELECT a.user_id, a.pic, a.created_at, a.uid, a.nick_name, COUNT(DISTINCT b.feed_id) AS feedCount, COUNT(c.user_id) AS allFeedLikeCount
+        SELECT a.user_id AS profileUserId, a.pic, a.created_at, a.uid, a.nick_name
+             , COUNT(DISTINCT b.feed_id) AS feedCount
+             , COUNT(DISTINCT b.feed_id, c.user_id) AS allFeedLikeCount
+             , COUNT(DISTINCT d.to_user_id) AS followerCount
+             , COUNT(DISTINCT e.from_user_id) AS followingCount
         FROM user a
         JOIN feed b
         ON a.user_id = b.writer_user_id
         LEFT JOIN feed_like c
         ON b.feed_id = c.feed_id
-        WHERE a.user_id = ${profileUserId};
+        LEFT JOIN user_follow d
+        ON a.user_id = d.from_user_id
+        LEFT JOIN user_follow e
+        ON a.user_id = e.to_user_id
+        where a.user_id = #{profileUserId};
 
     </select>
 

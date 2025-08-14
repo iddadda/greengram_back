@@ -2,14 +2,12 @@ package com.green.greengram.entity;
 
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor  // 기본생성자 자동 생성
 @EqualsAndHashCode
 public class UserFollow extends CreatedAt {
@@ -26,6 +24,18 @@ public class UserFollow extends CreatedAt {
     @MapsId("toUserId")
     @JoinColumn(name = "to_user_id", nullable = false)
     private User toUser;
+
+
+//    public void userFollow() {
+//        User user = new User();
+//        user.setUserId(userFollowIds.getFromUserId());
+//        this.fromUser = user;
+//
+//        user = new User();
+//        user.setUserId(userFollowIds.getToUserId());
+//        this.toUser = user;
+//    }
+
 
 
 }

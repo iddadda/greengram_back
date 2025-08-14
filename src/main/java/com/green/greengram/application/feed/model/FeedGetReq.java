@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.web.bind.annotation.BindParam;
 
+import java.beans.ConstructorProperties;
+
 @Getter
 @ToString
 public class FeedGetReq {
@@ -21,10 +23,13 @@ public class FeedGetReq {
     @Max(value = 100, message = "100 이하")
     private Integer rowPerPage;
 
+    @Positive
+    private Long profileUserId;
 
     //    key값에 대문자 없애고 @ModelAttribute 를 사용하기 위한 생성자
-    public FeedGetReq(Integer page, @BindParam("row_per_page") Integer rowPerPage) {
+    public FeedGetReq(Integer page, @BindParam("row_per_page") Integer rowPerPage, @BindParam("profile_user_id") Long profileUserId) {
         this.page = page;
         this.rowPerPage = rowPerPage;
+        this.profileUserId = profileUserId;
     }
 }

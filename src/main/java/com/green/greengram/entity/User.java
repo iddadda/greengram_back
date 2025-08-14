@@ -2,9 +2,7 @@ package com.green.greengram.entity;
 
 import com.green.greengram.config.enumcode.model.EnumUserRole;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +10,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 public class User extends UpdatedAt {
     @Id
