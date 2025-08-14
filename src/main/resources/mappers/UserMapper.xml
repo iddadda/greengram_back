@@ -8,14 +8,17 @@
              , COUNT(DISTINCT b.feed_id, c.user_id) AS allFeedLikeCount
              , COUNT(DISTINCT d.to_user_id) AS followerCount
              , COUNT(DISTINCT e.from_user_id) AS followingCount
+        , MAX(IF(e.from_user_id = #{signedUserId}, 1, 0))  <!-- 로그인 사용자가 프로필 주인을 팔로우 했다면 1, 아니면 0 -->
+        + MAX(IF(d.to_user_id = #{signedUserId}, 2, 0))    <!-- 프로필 주인이 로그인 사용자를 팔로우 했다면 2, 아니면 0 -->
+        AS followState                                     <!-- 맞팔로우 관계라면 3 -->
         FROM user a
         JOIN feed b
         ON a.user_id = b.writer_user_id
         LEFT JOIN feed_like c
         ON b.feed_id = c.feed_id
-        LEFT JOIN user_follow d
+        LEFT JOIN user_follow d  <!-- 팔로워 -->
         ON a.user_id = d.from_user_id
-        LEFT JOIN user_follow e
+        LEFT JOIN user_follow e  <!-- 팔로잉 -->
         ON a.user_id = e.to_user_id
         where a.user_id = #{profileUserId};
 
