@@ -1,9 +1,6 @@
 package com.green.greengram.application.user;
 
-import com.green.greengram.application.user.model.UserSignInDto;
-import com.green.greengram.application.user.model.UserSignInReq;
-import com.green.greengram.application.user.model.UserSignInRes;
-import com.green.greengram.application.user.model.UserSignUpReq;
+import com.green.greengram.application.user.model.*;
 import com.green.greengram.config.enumcode.model.EnumUserRole;
 import com.green.greengram.config.model.JwtUser;
 import com.green.greengram.config.util.ImgUploadManager;
@@ -26,8 +23,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ImgUploadManager imgUploadManager;
+    private final UserMapper userMapper;
 
-//    signUp
+    //    signUp
     @Transactional
     public void signUp(UserSignUpReq req, MultipartFile pic) {
         String hashedPassword = passwordEncoder.encode(req.getUpw());
@@ -66,5 +64,10 @@ public class UserService {
                 .jwtUser(jwtUser)
                 .userSignInRes(userSignInRes)
                 .build();
+    }
+
+    //    프로필 조회
+    public UserProfileGetRes getProfileUser(UserProfileGetDto dto) {
+        return userMapper.findProfileByUserId(dto);
     }
 }
