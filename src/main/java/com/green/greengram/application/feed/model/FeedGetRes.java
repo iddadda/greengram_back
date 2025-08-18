@@ -17,6 +17,7 @@ public class FeedGetRes {
     private String writerNickName;
     private String writerPic;
     private int isLike;  // 0 이면 좋아요 x, 1 이면 좋아요 o
+    private int likeCount;  // 해당 피드의 좋아요 수
     private List<String> pics;
 
 //    피드에 달려있는 댓글정보

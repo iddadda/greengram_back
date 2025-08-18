@@ -3,16 +3,22 @@
 <mapper namespace="com.green.greengram.application.feed.FeedMapper">
 
     <select id="findAllLimitedTo">
-        SELECT a.feed_id, contents, location, a.created_at, a.writer_user_id, uid AS writerUid, nick_name AS writerNickName, pic AS writerPic, c.feed_id IS NOT NULL AS isLike
+         SELECT a.feed_id, contents, location, a.created_at, a.writer_user_id, uid AS writerUid
+        , nick_name AS writerNickName, pic AS writerPic
+        , fl.feed_id IS NOT NULL AS isLike
+        , COUNT(flk.feed_id) AS likeCount
         FROM feed a
         JOIN user b
         ON a.writer_user_id = b.user_id
-        LEFT JOIN feed_like c
-        ON a.feed_id = c.feed_id
-        AND c.user_id = #{signedUserId}
+        LEFT JOIN feed_like fl
+        ON a.feed_id = fl.feed_id
+        AND fl.user_id = #{signedUserId}
+        LEFT JOIN feed_like flk
+        ON a.feed_id = flk.feed_id
         <if test="profileUserId != null">
             WHERE a.writer_user_id = #{profileUserId}
         </if>
+        GROUP BY a.feed_id
         ORDER BY a.feed_id DESC
         LIMIT #{startIdx}, #{size}
     </select>
@@ -22,7 +28,6 @@
         FROM feed_pic
         WHERE feed_id = #{feedId}
     </select>
-
 
 
 
