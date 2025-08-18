@@ -39,6 +39,7 @@ public class ImgUploadManager {
         return randomFileNames;
     }
 
+//    profile user 폴더 경로 생성
     private String makeProfileDirectoryPath(long userId){
         return String.format("%s/%s/%d", constFile.getUploadDirectory(), constFile.getProfilePic(), userId);
 

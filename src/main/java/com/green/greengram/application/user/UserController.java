@@ -65,12 +65,23 @@ public class UserController {
         UserProfileGetRes userProfileGetRes = userService.getProfileUser(dto);
         return new ResultResponse<>("프로파일 유저 정보", userProfileGetRes);
     }
-    
+
+//    profile 사진 수정
     @PatchMapping("/profile/pic")
     public ResultResponse<?> patchProfilePic(@AuthenticationPrincipal UserPrincipal userPrincipal
                                             , @RequestPart MultipartFile pic) {
         String saveFileName = userService.patchProfilePic(userPrincipal.getSignedUserId(), pic);
         return new ResultResponse<>("profile 사진 수정 완료", saveFileName);
+    }
+
+
+//    DeleteMapping - /profile/pic
+//    profile 있는 폴더 삭제
+    @DeleteMapping("/profile/pic")
+    public ResultResponse<?> deleteProfilePic(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+         userService.deleteProfilePic(userPrincipal.getSignedUserId());
+
+        return new ResultResponse<>("profile 사진 삭제 완료", null);
     }
 
 }
