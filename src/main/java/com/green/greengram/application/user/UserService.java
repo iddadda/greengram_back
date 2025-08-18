@@ -70,4 +70,19 @@ public class UserService {
     public UserProfileGetRes getProfileUser(UserProfileGetDto dto) {
         return userMapper.findProfileByUserId(dto);
     }
+
+    //    프로필 사진 수정
+    @Transactional
+    public String patchProfilePic(long signedUserId, MultipartFile pic) {
+        User user = userRepository.findById(signedUserId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다."));
+
+        imgUploadManager.removeProfileDirectory(signedUserId);
+
+        String saveFileName = imgUploadManager.saveProfilePic(signedUserId, pic);
+        user.setPic(saveFileName);
+
+        return saveFileName;
+
+    }
 }

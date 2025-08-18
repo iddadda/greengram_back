@@ -14,10 +14,7 @@ public class FollowService {
     private final FollowRepository followRepository;
 
     public void postUserFollow(Long fromUserId, Long toUserId) {
-        UserFollowIds userFollowIds = UserFollowIds.builder()
-                .fromUserId(fromUserId)
-                .toUserId(toUserId)
-                .build();
+        UserFollowIds userFollowIds = getIds(fromUserId, toUserId);
 
         User fromUser = new User();
         fromUser.setUserId(userFollowIds.getFromUserId());
@@ -33,5 +30,21 @@ public class FollowService {
 //        userFollow.userFollow();
 
         followRepository.save(userFollow);
+    }
+
+    public void deleteUserFollow(Long fromUserId, Long toUserId) {
+        UserFollowIds userFollowIds = getIds(fromUserId, toUserId);
+
+        followRepository.deleteById(userFollowIds);
+    }
+
+
+    //    follow 관계인 userId 를 받는 메소드 생성 (동일한 코드 반복으로 인해 메소드로 만듦)
+    private UserFollowIds getIds(long fromUserId, long toUserId) {
+        return UserFollowIds.builder()
+                .fromUserId(fromUserId)
+                .toUserId(toUserId)
+                .build();
+
     }
 }
