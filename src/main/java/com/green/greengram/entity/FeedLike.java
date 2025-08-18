@@ -11,7 +11,7 @@ import lombok.*;
 @EqualsAndHashCode
 public class FeedLike extends CreatedAt {
     @EmbeddedId
-    FeedLikeIds feedLikeIds;
+    private FeedLikeIds id;
 
     @ManyToOne
     @MapsId("feedId")

@@ -3,24 +3,24 @@
 <mapper namespace="com.green.greengram.application.user.UserMapper">
 
     <select id="findProfileByUserId">
-        SELECT a.user_id AS profileUserId, a.pic, a.created_at, a.uid, a.nick_name
-             , COUNT(DISTINCT b.feed_id) AS feedCount
-             , COUNT(DISTINCT b.feed_id, c.user_id) AS allFeedLikeCount
-             , COUNT(DISTINCT d.to_user_id) AS followerCount
-             , COUNT(DISTINCT e.from_user_id) AS followingCount
-        , MAX(IF(e.from_user_id = #{signedUserId}, 1, 0))  <!-- 로그인 사용자가 프로필 주인을 팔로우 했다면 1, 아니면 0 -->
-        + MAX(IF(d.to_user_id = #{signedUserId}, 2, 0))    <!-- 프로필 주인이 로그인 사용자를 팔로우 했다면 2, 아니면 0 -->
-        AS followState                                     <!-- 맞팔로우 관계라면 3 -->
-        FROM user a
-        JOIN feed b
-        ON a.user_id = b.writer_user_id
-        LEFT JOIN feed_like c
-        ON b.feed_id = c.feed_id
-        LEFT JOIN user_follow d  <!-- 팔로워 -->
-        ON a.user_id = d.from_user_id
-        LEFT JOIN user_follow e  <!-- 팔로잉 -->
-        ON a.user_id = e.to_user_id
-        where a.user_id = #{profileUserId};
+        SELECT u.user_id, u.pic, u.created_at, u.uid, u.nick_name
+        , COUNT(DISTINCT f.feed_id) AS feedCount
+        , COUNT(DISTINCT f.feed_id, fl.user_id) AS allFeedLikeCount
+        , COUNT(DISTINCT fwer.from_user_id) AS followerCount <!-- 프로필 주인을 팔로우 하는 사람들은 몇 명인가 -->
+        , COUNT(DISTINCT fwing.to_user_id) AS followingCount <!-- 프로필 주인이 팔로우 하는 사람들은 몇 명인가 -->
+        , MAX(IF(fwer.from_user_id = #{signedUserId}, 1, 0)) <!-- 로그인 사용자가 프로필 주인을 팔로우한다면 1, 아니면 0 -->
+        + MAX(IF(fwing.to_user_id = #{signedUserId}, 2, 0)) <!-- 프로필 주인이 로그인 사용자를 팔로우한다면 2, 아니면 0 -->
+        AS followState
+        FROM user u
+        LEFT JOIN feed f
+        ON f.writer_user_id = u.user_id
+        LEFT JOIN feed_like fl
+        ON fl.feed_id = f.feed_id
+        LEFT JOIN user_follow fwer <!-- 프로필 주인을 팔로우 하는 사람들 정보 -->
+        ON fwer.to_user_id = u.user_id
+        LEFT JOIN user_follow fwing <!-- 프로필 주인이 팔로우 하는 사람들 정보 -->
+        ON fwing.from_user_id = u.user_id
+        WHERE u.user_id = #{profileUserId}
 
     </select>
 

@@ -57,4 +57,12 @@ public class FeedController {
 
         return new ResultResponse<>("조회 성공", result);
     }
+
+//    피드 삭제
+    @DeleteMapping
+    public ResultResponse<?> deleteFeed(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam("feed_id") long feedId) {
+        log.info("feedId:{}", feedId);
+        feedService.deleteFeed(userPrincipal.getSignedUserId(), feedId);
+        return new ResultResponse<>("삭제 성공", null);
+    }
 }

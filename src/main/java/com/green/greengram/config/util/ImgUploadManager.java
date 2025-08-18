@@ -19,9 +19,17 @@ public class ImgUploadManager {
     private final ConstFile constFile;
     private final MyFileUtils myFileUtils;
 
+
+    //    feed 사진 디렉토리 경로 생성
+    public String makeFeedDirectoryPath(long feedId) {
+        return String.format("%s/%s/%d", constFile.getUploadDirectory(), constFile.getFeedPic(), feedId);
+    }
+    
+//    feed 사진 업로드
     public List<String> saveFeedPics(long feedId, List<MultipartFile> pics) {
 //        폴더 생성
-        String directory = String.format("%s/%s/%d", constFile.getUploadDirectory(), constFile.getFeedPic(), feedId);
+//        String directory = String.format("%s/%s/%d", constFile.getUploadDirectory(), constFile.getFeedPic(), feedId);
+        String directory = makeFeedDirectoryPath(feedId);
         myFileUtils.makeFolders(directory);
 
         List<String> randomFileNames = new ArrayList<>(pics.size());
@@ -39,7 +47,13 @@ public class ImgUploadManager {
         return randomFileNames;
     }
 
-//    profile user 폴더 경로 생성
+    //    feed 디렉토리 삭제
+    public void removeFeedDirectory(long feedId) {
+        String directory = makeFeedDirectoryPath(feedId);
+        myFileUtils.deleteFolder(directory, true);
+    }
+
+    //    profile user 폴더 경로 생성
     private String makeProfileDirectoryPath(long userId){
         return String.format("%s/%s/%d", constFile.getUploadDirectory(), constFile.getProfilePic(), userId);
 

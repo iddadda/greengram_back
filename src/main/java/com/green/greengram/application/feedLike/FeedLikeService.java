@@ -16,8 +16,8 @@ public class FeedLikeService {
     private final FeedLikeRepository feedLikeRepository;
 
     public boolean toggle(Long signedUserId, FeedLikeToggleReq req) {
-log.info("사용자id:{}",  signedUserId);
-log.info("req:{}", req);
+        log.info("사용자id:{}",  signedUserId);
+        log.info("req:{}", req);
 
         FeedLikeIds feedLikeIds = FeedLikeIds.builder()
                 .userId(signedUserId)
@@ -33,7 +33,7 @@ log.info("req:{}", req);
             user.setUserId(signedUserId);
 
             FeedLike feedLikeSave = FeedLike.builder()
-                    .feedLikeIds(feedLikeIds)
+                    .id(feedLikeIds)
                     .userId(user)
                     .feedId(feed)
                     .build();
