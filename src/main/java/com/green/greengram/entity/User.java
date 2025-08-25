@@ -38,7 +38,7 @@ public class User extends UpdatedAt {
     @Column(length = 100,  nullable = false)
     private String upw;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<UserRole> userRoles = new ArrayList<>(1);
 
 
