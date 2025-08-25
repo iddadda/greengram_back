@@ -3,6 +3,7 @@ package com.green.greengram.config.security.oauth;
 
 import com.green.greengram.application.user.UserRepository;
 import com.green.greengram.config.enumcode.model.EnumUserRole;
+import com.green.greengram.config.model.JwtUser;
 import com.green.greengram.config.model.UserPrincipal;
 import com.green.greengram.config.security.SignInProviderType;
 import com.green.greengram.config.security.oauth.userinfo.Oauth2UserInfo;
@@ -81,7 +82,10 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
         List<EnumUserRole> roles = user.getUserRoles().stream().map(item -> item.getUserRoleIds()
                                                                         .getRoleCode()).toList();
 
-        UserPrincipal myUserDetails = new UserPrincipal(user.getUserId(), roles);
+        String nickName = user.getNickName() == null ? user.getUid() : user.getNickName();
+        JwtUser jwtUser = new OAuth2JwtUser(nickName, user.getPic(), user.getUserId(), roles);
+
+        UserPrincipal myUserDetails = new UserPrincipal(jwtUser);
 
         return myUserDetails;
     }

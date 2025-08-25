@@ -97,8 +97,8 @@ public class JwtTokenManager {
         String accessToken = getAccessTokenFromCookie(request);
         if(accessToken == null) {return null;}
         JwtUser jwtUser = getJwtUserFromToken(accessToken);
-        if (jwtUser == null) {return null;}  // 앞에서 예외처리를 안 해줘서 임시로 넣은 코드
-        UserPrincipal userPrincipal = new UserPrincipal(jwtUser.getSignedUserId(), jwtUser.getRoles());
+//        if (jwtUser == null) {return null;}  // 앞에서 예외처리를 안 해줘서 임시로 넣은 코드
+        UserPrincipal userPrincipal = new UserPrincipal(jwtUser);
         return new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
     }
 }

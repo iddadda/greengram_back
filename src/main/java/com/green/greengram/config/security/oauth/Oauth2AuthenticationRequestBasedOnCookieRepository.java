@@ -1,7 +1,7 @@
 package com.green.greengram.config.security.oauth;
 
-import com.green.greengram.config.CookieUtils;
 import com.green.greengram.config.constants.ConstOAuth2;
+import com.green.greengram.config.util.CookieUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,40 +19,44 @@ public class Oauth2AuthenticationRequestBasedOnCookieRepository
     private final CookieUtils cookieUtils;
     private final ConstOAuth2 constOAuth2;
 
+    //    객체를 쿠키에 담을 수 없어서 직렬화가 필요함
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
         return cookieUtils.getValue(request
-                                  , constOAuth2.getAuthorizationRequestCookieName()
+                                  , constOAuth2.authorizationRequestCookieName
                                   , OAuth2AuthorizationRequest.class);
     }
 
+
     @Override
-    public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
+    public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request
+                                        , HttpServletResponse response) {
         if(authorizationRequest == null) {
             this.removeAuthorizationCookies(response);
         }
         cookieUtils.setCookie(response
-                            , constOAuth2.getAuthorizationRequestCookieName()
+                            , constOAuth2.authorizationRequestCookieName
                             , authorizationRequest
-                            , constOAuth2.getCookieExpirySeconds()
+                            , constOAuth2.cookieExpirySeconds
                             , "/");
 
         //FE 요청한 redirect_uri 쿠키에 저장한다.
-        String redirectUriAfterLogin = request.getParameter(constOAuth2.getRedirectUriParamCookieName());
+        String redirectUriAfterLogin = request.getParameter(constOAuth2.redirectUriParamCookieName);
         cookieUtils.setCookie(response
-                , constOAuth2.getRedirectUriParamCookieName()
+                , constOAuth2.redirectUriParamCookieName
                 , redirectUriAfterLogin
-                , constOAuth2.getCookieExpirySeconds()
+                , constOAuth2.cookieExpirySeconds
                 , "/");
     }
 
     @Override
-    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request, HttpServletResponse response) {
+    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request
+                                                                , HttpServletResponse response) {
         return this.loadAuthorizationRequest(request);
     }
 
     public void removeAuthorizationCookies(HttpServletResponse response) {
-        cookieUtils.deleteCookie(response, constOAuth2.getAuthorizationRequestCookieName());
-        cookieUtils.deleteCookie(response, constOAuth2.getRedirectUriParamCookieName());
+        cookieUtils.deleteCookie(response, constOAuth2.authorizationRequestCookieName, "/");
+        cookieUtils.deleteCookie(response, constOAuth2.redirectUriParamCookieName, "/");
     }
 }

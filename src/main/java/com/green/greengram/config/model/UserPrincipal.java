@@ -16,14 +16,15 @@ import java.util.Map;
 @Slf4j
 @Getter
 public class UserPrincipal implements UserDetails, OAuth2User {
-    private final long signedUserId;
+    private JwtUser jwtUser;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(long memberId, List<EnumUserRole> roles) {
-        this.signedUserId = memberId;
+    public UserPrincipal(JwtUser jwtUser) {
+        this.jwtUser = jwtUser;
+
         List<SimpleGrantedAuthority> list = new ArrayList<>();
 //         방법 1
-//        for(EnumUserRole role : roles){
+//        for(EnumUserRole role : jwtUser.getRoles()){
 //            String roleName = String.format("ROLE_%s", role.name());
 //            log.info("roleName: {}", roleName);
 //            list.add(new SimpleGrantedAuthority(roleName));
@@ -31,7 +32,11 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 //        this.authorities = list;
 
 //        방법2
-        this.authorities = roles.stream().map(role -> new SimpleGrantedAuthority(String.format("ROLE_%s", role.name()))).toList();
+        this.authorities = jwtUser.getRoles().stream().map(role -> new SimpleGrantedAuthority(String.format("ROLE_%s", role.name()))).toList();
+    }
+
+    public Long getSignedUserId() {
+        return jwtUser.getSignedUserId();
     }
 
     @Override
@@ -45,4 +50,6 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     @Override
     public Map<String, Object> getAttributes() { return Map.of(); }
+
+
 }
