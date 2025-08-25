@@ -16,7 +16,7 @@ import java.util.Map;
 @Slf4j
 @Getter
 public class UserPrincipal implements UserDetails, OAuth2User {
-    private JwtUser jwtUser;
+    private final JwtUser jwtUser;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(JwtUser jwtUser) {
@@ -24,15 +24,15 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
         List<SimpleGrantedAuthority> list = new ArrayList<>();
 //         방법 1
-//        for(EnumUserRole role : jwtUser.getRoles()){
-//            String roleName = String.format("ROLE_%s", role.name());
-//            log.info("roleName: {}", roleName);
-//            list.add(new SimpleGrantedAuthority(roleName));
-//        }
-//        this.authorities = list;
+        for(EnumUserRole role : jwtUser.getRoles()){
+            String roleName = String.format("ROLE_%s", role.name());
+            log.info("roleName: {}", roleName);
+            list.add(new SimpleGrantedAuthority(roleName));
+        }
+        this.authorities = list;
 
 //        방법2
-        this.authorities = jwtUser.getRoles().stream().map(role -> new SimpleGrantedAuthority(String.format("ROLE_%s", role.name()))).toList();
+//        this.authorities = jwtUser.getRoles().stream().map(role -> new SimpleGrantedAuthority(String.format("ROLE_%s", role.name()))).toList();
     }
 
     public Long getSignedUserId() {

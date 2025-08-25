@@ -21,9 +21,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -49,8 +47,8 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
         플랫폼 문자열값은 spring.security.oauth2.client.registration 아래에 있는 속성값들이다. (google, kakao, naver)
          */
         SignInProviderType signInProviderType = SignInProviderType.valueOf(req.getClientRegistration()
-                                                                              .getRegistrationId()
-                                                                              .toUpperCase());
+                .getRegistrationId()
+                .toUpperCase());
         //사용하기 편하도록 규격화된 객체로 변환
         Oauth2UserInfo oauth2UserInfo = oauth2UserInfoFactory.getOauth2UserInfo(signInProviderType, oAuth2User.getAttributes());
 
@@ -63,10 +61,10 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
             user.setUpw("");
             user.setNickName(oauth2UserInfo.getName());
             user.setPic(oauth2UserInfo.getProfileImageUrl());
-            userRepository.save(user);
 
+            //최초 소셜 로그인은 회원가입으로 권한은 USER_1 처리
             List<UserRole> userRoles = new ArrayList<>(1);
-            UserRoleIds ids = new UserRoleIds(user.getUserId(), EnumUserRole.USER_1);  // 최초가입 시 권한은 USER_1
+            UserRoleIds ids = new UserRoleIds(user.getUserId(), EnumUserRole.USER_1);
 
             UserRole userRole = new UserRole(ids, user);
             userRoles.add(userRole);
@@ -74,19 +72,13 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
             userRepository.save(user);
         }
 
-//        OAuth2JwtUser oauth2jwtUser = new OAuth2JwtUser(user.getNickName()
-//                                                      , user.getPic()
-//                                                      , user.getUserId()
-//                                                      , Arrays.asList("ROLE_USER"));
-
         List<EnumUserRole> roles = user.getUserRoles().stream().map(item -> item.getUserRoleIds()
-                                                                        .getRoleCode()).toList();
+                .getRoleCode()).toList();
 
         String nickName = user.getNickName() == null ? user.getUid() : user.getNickName();
         JwtUser jwtUser = new OAuth2JwtUser(nickName, user.getPic(), user.getUserId(), roles);
 
         UserPrincipal myUserDetails = new UserPrincipal(jwtUser);
-
         return myUserDetails;
     }
 }

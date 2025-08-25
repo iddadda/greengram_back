@@ -51,24 +51,21 @@ public class CookieUtils {
 
     public <T> T getValue(HttpServletRequest req, String name, Class<T> valueType) {
         Cookie cookie = getCookie(req, name);
-        if (cookie == null) {
-            return null;
-        }
-        if (valueType == String.class) {
+        if (cookie == null) { return null; }
+        if(valueType == String.class) {
             return (T) cookie.getValue();
         }
         return deserializeCookie(cookie, valueType);
     }
 
-    //    직렬화
     private String serializeObject(Object obj) {
-        return Base64.getUrlEncoder().encodeToString(SerializationUtils.serialize(obj));
+        return Base64.getUrlEncoder().encodeToString( SerializationUtils.serialize(obj) );
     }
 
     //역직렬화, 문자열값을 객체로 변환
     private <T> T deserializeCookie(Cookie cookie, Class<T> valueType) {
         return valueType.cast(
-                SerializationUtils.deserialize(Base64.getUrlDecoder().decode(cookie.getValue()))
+                SerializationUtils.deserialize( Base64.getUrlDecoder().decode(cookie.getValue()) )
         );
     }
 
