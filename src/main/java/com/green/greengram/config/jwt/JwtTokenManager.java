@@ -12,18 +12,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-// JWT 총괄 책임자
+//JWT 총괄 책임자
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenManager {
-    private final ConstJwt constJwt;
-    private final CookieUtils cookieUtils;
-    private final JwtTokenProvider jwtTokenProvider;   // 토큰 만들 수 있는 필드
+    private final ConstJwt constJwt; //설정 내용(문자열)
+    private final CookieUtils cookieUtils; //쿠키 관련
+    private final JwtTokenProvider jwtTokenProvider; //JWT 관련
 
     public void issue(HttpServletResponse response, JwtUser jwtUser) {
-        setAccessTokenInCookie(response, jwtUser); // 15분으로 설정함 // 실제 인증시 사용하는 토큰
-        setRefreshTokenInCookie(response, jwtUser); // 15일로 설정함  // 토큰 재발행시 사용하는 토큰
+        setAccessTokenInCookie(response, jwtUser);
+        setRefreshTokenInCookie(response, jwtUser);
     }
 
     public String generateAccessToken(JwtUser jwtUser) {
@@ -35,15 +35,20 @@ public class JwtTokenManager {
     }
 
     public void setAccessTokenInCookie(HttpServletResponse response, String accessToken) {
-        cookieUtils.setCookie(response, constJwt.getAccessTokenCookieName(), accessToken
-                , constJwt.getAccessTokenCookieValiditySeconds(), constJwt.getAccessTokenCookiePath());
+        cookieUtils.setCookie(response
+                , constJwt.getAccessTokenCookieName()
+                , accessToken
+                , constJwt.getAccessTokenCookieValiditySeconds()
+                , constJwt.getAccessTokenCookiePath());
     }
 
-    //    액세스 토큰 삭제
+    public String getAccessTokenFromCookie(HttpServletRequest request) {
+        return cookieUtils.getValue(request, constJwt.getAccessTokenCookieName());
+    }
+
     public void deleteAccessTokenInCookie(HttpServletResponse response) {
         cookieUtils.deleteCookie(response, constJwt.getAccessTokenCookieName(), constJwt.getAccessTokenCookiePath());
     }
-
 
     public String generateRefreshToken(JwtUser jwtUser) {
         return jwtTokenProvider.generateToken(jwtUser, constJwt.getRefreshTokenValidityMilliseconds());
@@ -57,21 +62,22 @@ public class JwtTokenManager {
         cookieUtils.setCookie(response, constJwt.getRefreshTokenCookieName(), refreshToken, constJwt.getRefreshTokenCookieValiditySeconds(), constJwt.getRefreshTokenCookiePath());
     }
 
-    //    리프레시 토큰 삭제
     public void deleteRefreshTokenInCookie(HttpServletResponse response) {
         cookieUtils.deleteCookie(response, constJwt.getRefreshTokenCookieName(), constJwt.getRefreshTokenCookiePath());
-    }
-
-    public JwtUser getJwtUserFromToken(String token) {
-        return jwtTokenProvider.getJwtUserFromToken(token);
     }
 
     public String getRefreshTokenFromCookie(HttpServletRequest request) {
         return cookieUtils.getValue(request, constJwt.getRefreshTokenCookieName());
     }
 
-    public String getAccessTokenFromCookie(HttpServletRequest request) {
-        return cookieUtils.getValue(request, constJwt.getAccessTokenCookieName());
+    public JwtUser getJwtUserFromToken(String token) {
+        return jwtTokenProvider.getJwtUserFromToken(token);
+    }
+
+    private void deleteSocialLogin(HttpServletResponse response) {
+        cookieUtils.deleteCookie(response, "JSESSIONID", null);
+        cookieUtils.deleteCookie(response, "Authorization", null);
+        cookieUtils.deleteCookie(response, "RefreshToken", null);
     }
 
     public void reissue(HttpServletRequest request, HttpServletResponse response) {
@@ -91,13 +97,14 @@ public class JwtTokenManager {
     public void signOut(HttpServletResponse response) {
         deleteAccessTokenInCookie(response);
         deleteRefreshTokenInCookie(response);
+        deleteSocialLogin(response);
     }
 
     public Authentication getAuthentication(HttpServletRequest request) {
         String accessToken = getAccessTokenFromCookie(request);
-        if(accessToken == null) {return null;}
+        if(accessToken == null){ return null; }
         JwtUser jwtUser = getJwtUserFromToken(accessToken);
-//        if (jwtUser == null) {return null;}  // 앞에서 예외처리를 안 해줘서 임시로 넣은 코드
+        //if(jwtUser == null) { return null; } //토큰이 오염됐을 시 예외발생하기 때문에 null처리는 안 해도 된다.
         UserPrincipal userPrincipal = new UserPrincipal(jwtUser);
         return new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
     }

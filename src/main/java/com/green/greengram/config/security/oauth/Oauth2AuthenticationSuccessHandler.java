@@ -52,23 +52,23 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         //쿼리스트링 생성을 위한 준비과정
         UserPrincipal myUserDetails = (UserPrincipal) auth.getPrincipal();
+        OAuth2JwtUser oAuth2JwtUser = (OAuth2JwtUser) myUserDetails.getJwtUser();
+        JwtUser jwtUser = new JwtUser(oAuth2JwtUser.getSignedUserId(), oAuth2JwtUser.getRoles());
 
-
-        OAuth2JwtUser jwtUser = (OAuth2JwtUser)myUserDetails.getJwtUser();
-
-        //AT, RT 생성
-        String accessToken = jwtTokenManager.generateAccessToken(jwtUser);
-        String refreshToken = jwtTokenManager.generateRefreshToken(jwtUser);
-
-        cookieUtils.setCookie(res, constJwt.getAccessTokenCookieName()
-                , accessToken
-                , constJwt.getAccessTokenCookieValiditySeconds()
-                , constJwt.getAccessTokenCookiePath());
-
-        cookieUtils.setCookie(res, constJwt.getRefreshTokenCookieName()
-                , refreshToken
-                , constJwt.getRefreshTokenCookieValiditySeconds()
-                , constJwt.getRefreshTokenCookiePath());
+        //AT, RT 생성 후 쿠키에 저장
+        jwtTokenManager.issue(res, jwtUser);
+//        String accessToken = jwtTokenManager.generateAccessToken(oAuth2JwtUser);
+//        String refreshToken = jwtTokenManager.generateRefreshToken(oAuth2JwtUser);
+//
+//        cookieUtils.setCookie(res, constJwt.getAccessTokenCookieName()
+//                , accessToken
+//                , constJwt.getAccessTokenCookieValiditySeconds()
+//                , constJwt.getAccessTokenCookiePath());
+//
+//        cookieUtils.setCookie(res, constJwt.getRefreshTokenCookieName()
+//                , refreshToken
+//                , constJwt.getRefreshTokenCookieValiditySeconds()
+//                , constJwt.getRefreshTokenCookiePath());
 
         /*
             쿼리스트링 생성
@@ -81,9 +81,9 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             "fe/redirect?user_id=20&nick_name=홍길동&pic=abc.jpg"
          */
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("user_id", jwtUser.getSignedUserId())
-                .queryParam("nick_name", jwtUser.getNickName()).encode()
-                .queryParam("pic", jwtUser.getPic())
+                .queryParam("user_id", oAuth2JwtUser.getSignedUserId())
+                .queryParam("nick_name", oAuth2JwtUser.getNickName()).encode()
+                .queryParam("pic", oAuth2JwtUser.getPic())
 
                 .build()
                 .toUriString();

@@ -41,11 +41,14 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
     }
 
     private OAuth2User process(OAuth2UserRequest req) {
-        OAuth2User oAuth2User = super.loadUser(req);
+        OAuth2User oAuth2User = super.loadUser(req);  // 소셜 로그인 완료하고 사용자 저보 JSON 형태의 데이털르 담고 있는 객체
         /*
         req.getClientRegistration().getRegistrationId(); 소셜로그인 신청한 플랫폼 문자열값이 넘어온다.
         플랫폼 문자열값은 spring.security.oauth2.client.registration 아래에 있는 속성값들이다. (google, kakao, naver)
          */
+//        소셜 로그인 accessToken
+        String oauth2AccessToken = req.getAccessToken().getTokenValue();
+
         SignInProviderType signInProviderType = SignInProviderType.valueOf(req.getClientRegistration()
                 .getRegistrationId()
                 .toUpperCase());
@@ -58,6 +61,7 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
             user = new User();
             user.setUid(oauth2UserInfo.getId());
             user.setProviderType(signInProviderType);
+            user.setAccessToken(oauth2AccessToken);
             user.setUpw("");
             user.setNickName(oauth2UserInfo.getName());
             user.setPic(oauth2UserInfo.getProfileImageUrl());
@@ -71,8 +75,10 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
 
             user.setUserRoles(userRoles);
 
-            userRepository.save(user);
+        } else {
+            user.setAccessToken(oauth2AccessToken);
         }
+            userRepository.save(user);
 
         List<EnumUserRole> roles = user.getUserRoles().stream().map(item -> item.getUserRoleIds()
                 .getRoleCode()).toList();
@@ -81,7 +87,7 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
         JwtUser jwtUser = new OAuth2JwtUser(nickName, user.getPic(), user.getUserId(), roles);
 
         UserPrincipal myUserDetails = new UserPrincipal(jwtUser);
-        return myUserDetails;
+        return myUserDetails;  //이 객체는 OAuth2AuthenticationSuccessHandler객체의 onAuthenticationSuccess메소드의 Authentication auth 매개변수로 전달된다.
     }
 }
 
