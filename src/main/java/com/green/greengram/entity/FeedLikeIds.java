@@ -1,11 +1,7 @@
 package com.green.greengram.entity;
 
-
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -14,6 +10,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
+@EqualsAndHashCode
 public class FeedLikeIds implements Serializable {
     private Long feedId;
     private Long userId;

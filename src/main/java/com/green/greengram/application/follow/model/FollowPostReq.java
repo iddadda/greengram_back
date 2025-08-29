@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 public class FollowPostReq {
     @Positive
-    @NotNull(message = "toUserId 는 필수입니다.")
+    @NotNull(message = "toUserId는 필수값")
     private Long toUserId;
-
 }

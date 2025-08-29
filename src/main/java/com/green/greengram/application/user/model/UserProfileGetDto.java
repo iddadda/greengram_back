@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UserProfileGetDto {
-    private Long signedUserId;
-    private Long profileUserId;
+    private long signedUserId;
+    private long profileUserId;
 }

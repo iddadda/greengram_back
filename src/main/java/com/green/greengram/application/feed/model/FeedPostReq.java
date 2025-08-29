@@ -1,18 +1,17 @@
 package com.green.greengram.application.feed.model;
 
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Builder
+@Setter
 @ToString
 public class FeedPostReq {
-
-    @Size(max = 1000, message = "constents 는 1,000 자 이하여야 합니다.")
+    @Size(max = 1_000, message = "contents는 1,000자 이하여야 합니다.")
     private String contents;
 
-    @Size(max = 30, message = "location 은 30 자 이하여야 합니다.")
+    @Size(max = 30, message = "location은 30자 이하여야 합니다.")
     private String location;
 }

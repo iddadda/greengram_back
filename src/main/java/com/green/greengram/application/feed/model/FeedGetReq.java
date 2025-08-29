@@ -1,14 +1,10 @@
 package com.green.greengram.application.feed.model;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
+
 import lombok.ToString;
 import org.springframework.web.bind.annotation.BindParam;
-
-import java.beans.ConstructorProperties;
 
 @Getter
 @ToString
@@ -17,19 +13,23 @@ public class FeedGetReq {
     @Positive
     private Integer page;
 
-    @NotNull(message = "row_per_page 값은 필수입니다.")
-    @Positive
-    @Min(value = 20, message = "20 이상")
-    @Max(value = 100, message = "100 이하")
+    @Min(value = 20, message = "20이상")
+    @Max(value = 100, message = "100이하")
+    @NotNull(message = "row_per_page값은 필수입니다.")
     private Integer rowPerPage;
 
     @Positive
     private Long profileUserId;
 
-    //    key값에 대문자 없애고 @ModelAttribute 를 사용하기 위한 생성자
-    public FeedGetReq(Integer page, @BindParam("row_per_page") Integer rowPerPage, @BindParam("profile_user_id") Long profileUserId) {
+    private String keyword;
+
+    public FeedGetReq(Integer page
+                    , @BindParam("row_per_page") Integer rowPerPage
+                    , @BindParam("profile_user_id") Long profileUserId
+                    , String keyword) {
         this.page = page;
         this.rowPerPage = rowPerPage;
         this.profileUserId = profileUserId;
+        this.keyword = keyword;
     }
 }

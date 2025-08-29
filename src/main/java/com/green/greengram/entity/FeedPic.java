@@ -6,15 +6,16 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class FeedPic extends CreatedAt {
     @EmbeddedId
     private FeedPicIds feedPicIds;
 
+    //관계설정
     @ManyToOne
+    @JoinColumn(name = "feed_id")
     @MapsId("feedId")
-    @JoinColumn(name = "feed_id",  nullable = false)
     private Feed feed;
 }

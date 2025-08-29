@@ -9,8 +9,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Embeddable
+@EqualsAndHashCode
 public class UserFollowIds implements Serializable {
     private Long fromUserId;
     private Long toUserId;

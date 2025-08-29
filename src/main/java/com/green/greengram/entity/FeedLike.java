@@ -6,20 +6,19 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@AllArgsConstructor
 public class FeedLike extends CreatedAt {
     @EmbeddedId
     private FeedLikeIds id;
 
     @ManyToOne
     @MapsId("feedId")
-    @JoinColumn(name = "feed_id", nullable = false)
-    private Feed feedId;
+    @JoinColumn(name = "feed_id")
+    private Feed feed;
 
     @ManyToOne
     @MapsId("userId")
-    @JoinColumn(name = "user_id", nullable = false)
-    private User userId;
+    @JoinColumn(name = "user_id")
+    private User user;
 }

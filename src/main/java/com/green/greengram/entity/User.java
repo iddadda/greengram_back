@@ -1,9 +1,11 @@
 package com.green.greengram.entity;
 
-import com.green.greengram.config.enumcode.model.EnumUserRole;
-import com.green.greengram.config.security.SignInProviderType;
+import com.green.greengram.configuration.enumcode.model.EnumUserRole;
+import com.green.greengram.configuration.security.SignInProviderType;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +13,11 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode
 @Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"uid", "provider_type"})
-
+    uniqueConstraints = @UniqueConstraint(columnNames = { "uid", "provider_type" })
 )
-public class User extends UpdatedAt {
+public class User extends UpdatedAt{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -29,21 +28,22 @@ public class User extends UpdatedAt {
     @Column(nullable = false, length = 2)
     private SignInProviderType providerType;
 
-    @Column(length = 30)
-    private String nickName;
-
-    @Column(length=50, nullable = false)
+    @Column(nullable = false, length = 50)
     private String uid;
+
+    @Column(nullable = false, length = 100)
+    private String upw;
+
+    @Column(length = 30)
+    private String nickName; //nick_name
 
     @Column(length = 100)
     private String pic;
 
-    @Column(length = 100,  nullable = false)
-    private String upw;
-
+    //cascade는 자식과 나랑 모든 연결 (내가 영속성되면 자식도 영속성되고, 내가 삭제되면 자식도 삭제 된다. 등등)
+    //ohphanRemoval은 userRoles에서 자식을 하나 제거함. 그러면 DB에도 뺀 자식은 삭제처리가 된다.
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<UserRole> userRoles = new ArrayList<>(1);
-
 
     public void addUserRoles(List<EnumUserRole> enumUserRole) {
         for(EnumUserRole e : enumUserRole) {
