@@ -44,6 +44,7 @@ public class JwtTokenManager {
     }
 
     public String getAccessTokenFromCookie(HttpServletRequest request) {
+        // request 에 쿠키가 있고 constJwt.getAccessTokenCookieName() 카 값에 있는 value 를 추출
         return cookieUtils.getValue(request, constJwt.getAccessTokenCookieName());
     }
 
@@ -102,11 +103,13 @@ public class JwtTokenManager {
     }
 
     public Authentication getAuthentication(HttpServletRequest request) {
-        String accessToken = getAccessTokenFromCookie(request);
+        String accessToken = getAccessTokenFromCookie(request); // AT 를 쿠키에서 뽑아낸다.
         if(accessToken == null){ return null; }
-        JwtUser jwtUser = getJwtUserFromToken(accessToken);
-        //if(jwtUser == null) { return null; } //토큰이 오염됐을 시 예외발생하기 때문에 null처리는 안 해도 된다.
+        JwtUser jwtUser = getJwtUserFromToken(accessToken); // AT 에서 jwtUser를 뽑아낸다.
+        //if(jwtUser == null) { return null; } //토큰이 오염됐을 시 예외발생하기 때문에 null 처리는 안 해도 된다.
         UserPrincipal userPrincipal = new UserPrincipal(jwtUser);
         return new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
+//        userPrincipal.getAuthorities()에 인가 내용이 꼭 들어가야 한다.
+//        UsernamePasswordAuthenticationToken 를 객체화 해서 객체 주소값을 리턴함
     }
 }

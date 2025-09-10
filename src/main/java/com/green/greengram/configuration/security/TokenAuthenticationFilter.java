@@ -51,7 +51,10 @@ RT - AT 재발행 용도 (약 15일)
 @Component
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
+// 외부에서 객체 생성해서(싱글톤) 객체 주소값만 받아와서 사용
+//    이상적인 방법은 인터페이스로 만드는 것.
     private final JwtTokenManager jwtTokenManager;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -59,7 +62,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         //토큰 처리
         Authentication authentication = jwtTokenManager.getAuthentication(request);
         if (authentication != null) {
-            SecurityContextHolder.getContext().setAuthentication(authentication); //인증 처리
+            SecurityContextHolder.getContext().setAuthentication(authentication); //인증 처리 // security 작동
         }
         filterChain.doFilter(request, response); //다음 필터에게 req, res 넘기기
     }
