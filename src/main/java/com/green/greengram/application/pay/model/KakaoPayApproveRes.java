@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class KakaoPayApproveRes {
-    private String aid;                 // 요청 고유 번호
+    private String aid;                 // 요청 고유 번호  // 최종 pk 값
     private String tid;                 // 결제 고유 번호
     private String cid;                 // 가맹점 코드
     @JsonProperty("partner_order_id")

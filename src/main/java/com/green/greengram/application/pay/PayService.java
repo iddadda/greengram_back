@@ -55,7 +55,7 @@ public class PayService {
                 .cid(constKakaoPay.cid)
                 .partnerOrderId(dto.getPartnerOrderId())
                 .partnerUserId(dto.getPartnerUserId())
-                .pgToken(req.getPgToken())
+                .pgToken(req.getPgToken())   // front 에서 통신으로 얻은 값
                 .payload("테스트")
                 .build();
 
