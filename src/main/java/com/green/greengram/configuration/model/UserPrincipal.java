@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Slf4j
 @Getter
+// UserDetails 가 꼭 implements 되어야 함.
 public class UserPrincipal implements UserDetails, OAuth2User {
     private final JwtUser jwtUser;
     private final Collection<? extends GrantedAuthority> authorities;

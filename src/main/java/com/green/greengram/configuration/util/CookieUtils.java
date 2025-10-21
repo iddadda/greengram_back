@@ -43,6 +43,7 @@ public class CookieUtils {
         this.setCookie(res, name, serializeObject(value), maxAge, path);
     }
 
+//   request와 access-token 이란 키값을 파라미터로 받음.(키값은 yaml에 설정 되어 있음)
     public String getValue(HttpServletRequest request, String name) {
         Cookie cookie = getCookie(request, name);
         if(cookie == null) { return null; }
@@ -72,10 +73,11 @@ public class CookieUtils {
     private Cookie getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies(); //쿠키가 req에 여러개가 있을 수 있기 때문에 배열로 리턴
 
+//        해당하는 쿠키가 있는지 확인하기 위한 반복문
         if (cookies != null && cookies.length > 0) { //쿠키에 뭔가 담겨져 있다면
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(name)) { //쿠키에 담긴 이름이 같은게 있다면
-                    return cookie; //해당 쿠키를 리턴
+                    return cookie; // 해당 쿠키를 리턴
                 }
             }
         }
