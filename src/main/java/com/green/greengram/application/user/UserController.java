@@ -69,8 +69,7 @@ public class UserController {
     }
 
     //DeleteMapping - /profile/pic
-    //프로파일 있는 폴더를 삭제하고
-    //return new ResultResponse<>("프로파일 사진 삭제 완료", null);
+    //프로파일 있는 폴더를 삭제하고 //return new ResultResponse<>("프로파일 사진 삭제 완료", null);
 
     @DeleteMapping("/profile/pic")
     public ResultResponse<?> patchProfilePic(@AuthenticationPrincipal UserPrincipal userPrincipal) {
